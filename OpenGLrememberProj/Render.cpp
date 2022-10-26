@@ -18,6 +18,128 @@
 bool textureMode = true;
 bool lightMode = true;
 
+class draw
+{
+public:
+	float height = 1;
+	float* height_pointer = &height;
+	float dots[9][3] = 
+	{ 
+	0, 1, *height_pointer,
+	-6, 5, *height_pointer,
+	-7, -2, *height_pointer,
+	-1, -2, *height_pointer,
+	1, -6, *height_pointer,
+	1, -1, *height_pointer,
+	5, 0, *height_pointer,
+	5, 4, *height_pointer,
+	0, 1, *height_pointer 
+	};
+
+	float* cross_product(float* a, float* b)
+	{
+		float result[] = { a[1] * b[2] - a[2] * b[1], -(a[0] * b[2] - a[2] * b[0]), a[0] * b[1] - a[1] * b[0] };
+		normalize(result);
+
+		return result;
+	}
+
+	float* calculate_normal(float* a, float* b, float* c)
+	{
+		float x[] = { b[0] - a[0], b[1] - a[1], b[2] - a[2] };
+		float y[] = { c[0] - a[0], c[1] - a[1], c[2] - a[2] };
+
+		float* result = cross_product(x, y);
+
+		return result;
+	}
+	
+	void normalize(float* v)
+	{
+		float length = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+		for (int i = 0; i < 3; i++)
+			v[i] = v[i] / length;
+	}
+
+	void draw_the_thing(float _height, float* height_pointer)
+	{
+		*height_pointer = _height;
+		glBegin(GL_POLYGON);
+		glVertex3d(0, 1, height);
+		glVertex3d(-6, 5, height);
+		glVertex3d(-7, -2, height);
+		glVertex3d(-1, -2, height);
+		glVertex3d(1, -6, height);
+		glVertex3d(1, -1, height);
+		glVertex3d(5, 0, height);
+		glVertex3d(5, 4, height);
+		glVertex3d(0, 1, height);
+		glEnd();
+	}
+
+	void connect_sides(float height_bottom, float height_upper)
+	{
+		glBegin(GL_QUADS);
+
+		glVertex3d(0, 1, height_bottom);
+		glVertex3d(-6, 5, height_bottom);
+		glVertex3d(-6, 5, height_upper);
+		glVertex3d(0, 1, height_upper);
+
+		glColor3d(1, 0, 1);
+		glVertex3d(-6, 5, height_bottom);
+		glVertex3d(-7, -2, height_bottom);
+		glVertex3d(-7, -2, height_upper);
+		glVertex3d(-6, 5, height_upper);
+
+		glColor3d(0, 0, 0);
+		glVertex3d(-7, -2, height_bottom);
+		glVertex3d(-1, -2, height_bottom);
+		glVertex3d(-1, -2, height_upper);
+		glVertex3d(-7, -2, height_upper);
+
+		glVertex3d(-1, -2, height_bottom);
+		glVertex3d(1, -6, height_bottom);
+		glVertex3d(1, -6, height_upper);
+		glVertex3d(-1, -2, height_upper);
+
+		glVertex3d(1, -6, height_bottom);
+		glVertex3d(1, -1, height_bottom);
+		glVertex3d(1, -1, height_upper);
+		glVertex3d(1, -6, height_upper);
+
+
+		glVertex3d(1, -1, height_bottom);
+		glVertex3d(5, 0, height_bottom);
+		glVertex3d(5, 0, height_upper);
+		glVertex3d(1, -1, height_upper);
+
+		glColor3d(0, 1, 0);
+
+		glVertex3d(5, 0, height_bottom);
+		glVertex3d(5, 4, height_bottom);
+		glVertex3d(5, 4, height_upper);
+		glVertex3d(5, 0, height_upper);
+
+		glColor3d(0, 0, 0);
+		glVertex3d(5, 4, height_bottom);
+		glVertex3d(0, 1, height_bottom);
+		glVertex3d(0, 1, height_upper);
+		glVertex3d(5, 4, height_upper);
+
+		glEnd();
+
+
+	}
+
+	void draw_in3d(float height_bottom, float height_upper, float* height_pointer)
+	{
+		draw_the_thing(height_bottom, height_pointer);
+		draw_the_thing(height_upper,height_pointer);
+		connect_sides(height_bottom, height_upper);
+	}
+};
+
 //класс для настройки камеры
 class CustomCamera : public Camera
 {
@@ -348,29 +470,9 @@ void Render(OpenGL *ogl)
 	//===================================
 	//Прогать тут  
 
-
-	//Начало рисования квадратика станкина
-	double A[2] = { -4, -4 };
-	double B[2] = { 4, -4 };
-	double C[2] = { 4, 4 };
-	double D[2] = { -4, 4 };
-
-	glBindTexture(GL_TEXTURE_2D, texId);
-
-	glColor3d(0.6, 0.6, 0.6);
-	glBegin(GL_QUADS);
-
-	glNormal3d(0, 0, 1);
-	glTexCoord2d(0, 0);
-	glVertex2dv(A);
-	glTexCoord2d(1, 0);
-	glVertex2dv(B);
-	glTexCoord2d(1, 1);
-	glVertex2dv(C);
-	glTexCoord2d(0, 1);
-	glVertex2dv(D);
-
-	glEnd();
+	draw thing;
+	thing.draw_in3d(0, 1, thing.height_pointer);
+	
 	//конец рисования квадратика станкина
 
 

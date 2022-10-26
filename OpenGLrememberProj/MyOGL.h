@@ -10,6 +10,7 @@
 #include <windows.h>
 #include <gl/GL.h>
 #include "gl/GLU.h"
+#include<string>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
