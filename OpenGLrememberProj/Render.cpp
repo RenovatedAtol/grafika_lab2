@@ -21,19 +21,18 @@ bool lightMode = true;
 class draw
 {
 public:
-	float height = 1;
-	float* height_pointer = &height;
-	float dots[9][3] = 
-	{ 
-	0, 1, *height_pointer,
-	-6, 5, *height_pointer,
-	-7, -2, *height_pointer,
-	-1, -2, *height_pointer,
-	1, -6, *height_pointer,
-	1, -1, *height_pointer,
-	5, 0, *height_pointer,
-	5, 4, *height_pointer,
-	0, 1, *height_pointer 
+	float _height = 1;
+	float dots[9][3] =
+	{
+	0, 1, _height,
+	-6, 5, _height,
+	-7, -2, _height,
+	-1, -2, _height,
+	1, -6, _height,
+	1, -1, _height,
+	5, 0, _height,
+	5, 4, _height,
+	0, 1, _height
 	};
 
 	float* cross_product(float* a, float* b)
@@ -61,81 +60,141 @@ public:
 			v[i] = v[i] / length;
 	}
 
-	void draw_the_thing(float _height, float* height_pointer)
+	void draw_the_thing(float height)
 	{
-		*height_pointer = _height;
+		for (int i = 0; i < 8; i++)
+		{
+			dots[i][2] = height;
+		}
+
 		glBegin(GL_POLYGON);
-		glVertex3d(0, 1, height);
-		glVertex3d(-6, 5, height);
-		glVertex3d(-7, -2, height);
-		glVertex3d(-1, -2, height);
-		glVertex3d(1, -6, height);
-		glVertex3d(1, -1, height);
-		glVertex3d(5, 0, height);
-		glVertex3d(5, 4, height);
-		glVertex3d(0, 1, height);
+		if (height <= 0)
+			glNormal3f(0, 0, -1);
+		else
+			glNormal3f(0, 0, 1);
+
+		for (int i = 0; i < 8; i++)
+		{
+			glVertex3fv(dots[i]);
+		}
 		glEnd();
 	}
 
 	void connect_sides(float height_bottom, float height_upper)
 	{
+		float side1[4][3] = 
+		{
+			0, 1, height_bottom,
+			-6, 5, height_bottom,
+			-6, 5, height_upper,
+			0, 1, height_upper
+		};
 		glBegin(GL_QUADS);
 
-		glVertex3d(0, 1, height_bottom);
-		glVertex3d(-6, 5, height_bottom);
-		glVertex3d(-6, 5, height_upper);
-		glVertex3d(0, 1, height_upper);
+		glNormal3fv(calculate_normal(side1[0], side1[1], side1[2]));
+		glVertex3fv(side1[0]);
+		glVertex3fv(side1[1]);
+		glVertex3fv(side1[2]);
+		glVertex3fv(side1[3]);
 
-		glColor3d(1, 0, 1);
-		glVertex3d(-6, 5, height_bottom);
-		glVertex3d(-7, -2, height_bottom);
-		glVertex3d(-7, -2, height_upper);
-		glVertex3d(-6, 5, height_upper);
+		float side2[4][3] = 
+		{
+			-6, 5, height_bottom,
+			-7, -2, height_bottom,
+			-7, -2, height_upper,
+			-6, 5, height_upper
+		};
+		glNormal3fv(calculate_normal(side2[0], side2[1], side2[2]));
+		glVertex3fv(side2[0]);
+		glVertex3fv(side2[1]);
+		glVertex3fv(side2[2]);
+		glVertex3fv(side2[3]);
 
-		glColor3d(0, 0, 0);
-		glVertex3d(-7, -2, height_bottom);
-		glVertex3d(-1, -2, height_bottom);
-		glVertex3d(-1, -2, height_upper);
-		glVertex3d(-7, -2, height_upper);
+		float side3[4][3] = 
+		{
+			-7, -2, height_bottom,
+			-1, -2, height_bottom,
+			-1, -2, height_upper,
+			-7, -2, height_upper
+		};
+		glNormal3fv(calculate_normal(side3[0], side3[1], side3[2]));
+		glVertex3fv(side3[0]);
+		glVertex3fv(side3[1]);
+		glVertex3fv(side3[2]);
+		glVertex3fv(side3[3]);
 
-		glVertex3d(-1, -2, height_bottom);
-		glVertex3d(1, -6, height_bottom);
-		glVertex3d(1, -6, height_upper);
-		glVertex3d(-1, -2, height_upper);
+		float side4[4][3] =
+		{
+			-1, -2, height_bottom,
+			1, -6, height_bottom,
+			1, -6, height_upper,
+			-1, -2, height_upper
+		};
+		glNormal3fv(calculate_normal(side4[0], side4[1], side4[2]));
+		glVertex3fv(side4[0]);
+		glVertex3fv(side4[1]);
+		glVertex3fv(side4[2]);
+		glVertex3fv(side4[3]);
 
-		glVertex3d(1, -6, height_bottom);
-		glVertex3d(1, -1, height_bottom);
-		glVertex3d(1, -1, height_upper);
-		glVertex3d(1, -6, height_upper);
+		float side5[4][3] =
+		{
+			1, -6, height_bottom,
+			1, -1, height_bottom,
+			1, -1, height_upper,
+			1, -6, height_upper
+		};
+		glNormal3fv(calculate_normal(side5[0], side5[1], side5[2]));
+		glVertex3fv(side5[0]);
+		glVertex3fv(side5[1]);
+		glVertex3fv(side5[2]);
+		glVertex3fv(side5[3]);
 
+		float side6[4][3] =
+		{
+			1, -1, height_bottom,
+			5, 0, height_bottom,
+			5, 0, height_upper,
+			1, -1, height_upper
+		};
+		glNormal3fv(calculate_normal(side6[0], side6[1], side6[2]));
+		glVertex3fv(side6[0]);
+		glVertex3fv(side6[1]);
+		glVertex3fv(side6[2]);
+		glVertex3fv(side6[3]);
 
-		glVertex3d(1, -1, height_bottom);
-		glVertex3d(5, 0, height_bottom);
-		glVertex3d(5, 0, height_upper);
-		glVertex3d(1, -1, height_upper);
+		float side7[4][3] =
+		{
+			5, 0, height_bottom,
+			5, 4, height_bottom,
+			5, 4, height_upper,
+			5, 0, height_upper
+		};
+		glNormal3fv(calculate_normal(side7[0], side7[1], side7[2]));
+		glVertex3fv(side7[0]);
+		glVertex3fv(side7[1]);
+		glVertex3fv(side7[2]);
+		glVertex3fv(side7[3]);
 
-		glColor3d(0, 1, 0);
-
-		glVertex3d(5, 0, height_bottom);
-		glVertex3d(5, 4, height_bottom);
-		glVertex3d(5, 4, height_upper);
-		glVertex3d(5, 0, height_upper);
-
-		glColor3d(0, 0, 0);
-		glVertex3d(5, 4, height_bottom);
-		glVertex3d(0, 1, height_bottom);
-		glVertex3d(0, 1, height_upper);
-		glVertex3d(5, 4, height_upper);
+		float side8[4][3] =
+		{
+			5, 4, height_bottom,
+			0, 1, height_bottom,
+			0, 1, height_upper,
+			5, 4, height_upper
+		};
+		glNormal3fv(calculate_normal(side8[0], side8[1], side8[2]));
+		glVertex3fv(side8[0]);
+		glVertex3fv(side8[1]);
+		glVertex3fv(side8[2]);
+		glVertex3fv(side8[3]);
 
 		glEnd();
-
-
 	}
 
-	void draw_in3d(float height_bottom, float height_upper, float* height_pointer)
+	void draw_in3d(float height_bottom, float height_upper)
 	{
-		draw_the_thing(height_bottom, height_pointer);
-		draw_the_thing(height_upper,height_pointer);
+		draw_the_thing(height_bottom);
+		draw_the_thing(height_upper);
 		connect_sides(height_bottom, height_upper);
 	}
 };
@@ -471,7 +530,7 @@ void Render(OpenGL *ogl)
 	//ѕрогать тут  
 
 	draw thing;
-	thing.draw_in3d(0, 1, thing.height_pointer);
+	thing.draw_in3d(0, 1);
 	
 	//конец рисовани€ квадратика станкина
 
