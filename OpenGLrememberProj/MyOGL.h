@@ -4,6 +4,7 @@
 #pragma warning( disable : 4305 )
 #pragma warning( disable : 4244 )
 
+#include <string>
 #include <vector>
 #include "MyVector3d.h"
 
@@ -18,7 +19,7 @@
 class OpenGL;
 
 
-//тип для делегата void f (void)
+//ГІГЁГЇ Г¤Г«Гї Г¤ГҐГ«ГҐГЈГ ГІГ  void f (void)
 typedef void(*action)(OpenGL *) ;
 typedef void(*MouseEventDelegate)(OpenGL *,int,int);
 typedef void(*WheelEventDelegate)(OpenGL *, int);
@@ -39,9 +40,9 @@ class OpenGL
 
 
 public:
-	//функции рендера
+	//ГґГіГ­ГЄГ¶ГЁГЁ Г°ГҐГ­Г¤ГҐГ°Г 
 	std::vector < action > renderFunc;
-	//функции инициализации
+	//ГґГіГ­ГЄГ¶ГЁГЁ ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГЁ
 	std::vector < action > initFunc;
 	
 	std::vector <MouseEventDelegate>  mouseFunc;
@@ -96,7 +97,7 @@ public:
 
 	void setTextureText(const char* text, char r, char g , char b );
 
-	//загрузка BMP из файла,
+	//Г§Г ГЈГ°ГіГ§ГЄГ  BMP ГЁГ§ ГґГ Г©Г«Г ,
 	static int LoadBMP(__in LPCSTR  filename, __out int* Wigth, __out int *Height, __out RGBTRIPLE **arr)
 	{
 		DWORD nBytesRead = 0;
@@ -109,12 +110,12 @@ public:
 		HANDLE file = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 
-		//Считываем заголовки BMP файла
+		//Г‘Г·ГЁГІГ»ГўГ ГҐГ¬ Г§Г ГЈГ®Г«Г®ГўГЄГЁ BMP ГґГ Г©Г«Г 
 		ReadFile((HANDLE)file, &fileh, sizeof(BITMAPFILEHEADER), &nBytesRead, 0);
 		ReadFile((HANDLE)file, &infoh, sizeof(BITMAPINFOHEADER), &nBytesRead, 0);
 
 		/*
-		Подробнее о заголовках https://msdn.microsoft.com/ru-ru/library/windows/desktop/dd183374(v=vs.85).aspx
+		ГЏГ®Г¤Г°Г®ГЎГ­ГҐГҐ Г® Г§Г ГЈГ®Г«Г®ГўГЄГ Гµ https://msdn.microsoft.com/ru-ru/library/windows/desktop/dd183374(v=vs.85).aspx
 		                       https://msdn.microsoft.com/ru-ru/library/windows/desktop/dd183376(v=vs.85).aspx
 
 		*/
@@ -143,8 +144,8 @@ public:
 	}
 
 
-	//Переводим BMP в массив чароов.  Один пиксаль кодируется последовательно 4мя байтами (R G B A)
-	//Так же тут картинка переворачивается, в BMP она хранится перевернутой.
+	//ГЏГҐГ°ГҐГўГ®Г¤ГЁГ¬ BMP Гў Г¬Г Г±Г±ГЁГў Г·Г Г°Г®Г®Гў.  ГЋГ¤ГЁГ­ ГЇГЁГЄГ±Г Г«Гј ГЄГ®Г¤ГЁГ°ГіГҐГІГ±Гї ГЇГ®Г±Г«ГҐГ¤Г®ГўГ ГІГҐГ«ГјГ­Г® 4Г¬Гї ГЎГ Г©ГІГ Г¬ГЁ (R G B A)
+	//Г’Г ГЄ Г¦ГҐ ГІГіГІ ГЄГ Г°ГІГЁГ­ГЄГ  ГЇГҐГ°ГҐГўГ®Г°Г Г·ГЁГўГ ГҐГІГ±Гї, Гў BMP Г®Г­Г  ГµГ°Г Г­ГЁГІГ±Гї ГЇГҐГ°ГҐГўГҐГ°Г­ГіГІГ®Г©.
 	static int RGBtoChar(__in RGBTRIPLE *arr, __in int width, __in int height, __out char **out)
 	{
 		int size = height*width * 4;
